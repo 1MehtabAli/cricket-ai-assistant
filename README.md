@@ -1,1 +1,1 @@
-Add your Groq API key in application.properties before running the project.
+Add your Groq API key in aclspplication.properties before running the project.
