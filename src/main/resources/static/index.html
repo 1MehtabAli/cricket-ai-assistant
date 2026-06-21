@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cricket AI Chat</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            width: 70%;
+            margin: 20px auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #chatBox {
+            height: 500px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .user {
+            text-align: right;
+            margin: 10px 0;
+        }
+
+        .ai {
+            text-align: left;
+            margin: 10px 0;
+        }
+
+        .bubble {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+
+        .user .bubble {
+            background: #007bff;
+            color: white;
+        }
+
+        .ai .bubble {
+            background: #e9ecef;
+        }
+
+        .input-area {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🏏 Cricket AI Assistant</h2>
+
+    <div id="chatBox"></div>
+
+    <div class="input-area">
+        <input
+                type="text"
+                id="question"
+                placeholder="Ask anything about cricket..."
+                onkeydown="if(event.key==='Enter') askAI()"
+        >
+
+        <button onclick="askAI()">Send</button>
+    </div>
+
+</div>
+
+<script>
+
+    async function askAI() {
+
+        let question = document.getElementById("question").value;
+
+        if(question.trim() === "")
+            return;
+
+        let chatBox = document.getElementById("chatBox");
+
+        chatBox.innerHTML += `
+            <div class="user">
+                <div class="bubble">${question}</div>
+            </div>
+        `;
+
+        document.getElementById("question").value = "";
+
+        chatBox.innerHTML += `
+            <div class="ai" id="loading">
+                <div class="bubble">Thinking...</div>
+            </div>
+        `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const response = await fetch("/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            body: question
+        });
+
+        const answer = await response.text();
+
+        document.getElementById("loading").remove();
+
+        chatBox.innerHTML += `
+            <div class="ai">
+                <div class="bubble">${answer}</div>
+            </div>
+        `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+Add your Groq API key in application.properties before running the project.
